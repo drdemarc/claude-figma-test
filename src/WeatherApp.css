@@ -1,0 +1,312 @@
+/* ─── Page ─────────────────────────────────────────────────────────────────── */
+.weather-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #d8d5cf;
+  padding: 40px 16px;
+  box-sizing: border-box;
+}
+
+/* ─── iPhone Frame ──────────────────────────────────────────────────────────── */
+.weather-phone {
+  width: 390px;
+  height: 844px;
+  background-color: #D97757;
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  flex-shrink: 0;
+}
+
+/* ─── Status Bar ────────────────────────────────────────────────────────────── */
+.weather-status-bar {
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 28px 8px;
+  flex-shrink: 0;
+}
+
+.weather-time {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #1c1814;
+  line-height: normal;
+}
+
+.weather-signal {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #6b6560;
+  line-height: normal;
+}
+
+/* ─── Scroll Content ────────────────────────────────────────────────────────── */
+.weather-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px 32px;
+  scrollbar-width: none;
+}
+
+.weather-scroll-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── City & Temp ───────────────────────────────────────────────────────────── */
+.weather-city-temp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  animation: weather-fade-in 0.4s ease;
+}
+
+@keyframes weather-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.weather-city {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  color: #1c1814;
+  text-align: center;
+  line-height: normal;
+  margin: 0;
+}
+
+.weather-date {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: #6b6560;
+  text-align: center;
+  line-height: normal;
+  margin: 0;
+}
+
+.weather-main-icon {
+  font-size: 80px;
+  line-height: 1;
+  text-align: center;
+  margin: 4px 0;
+}
+
+.weather-temperature {
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 88px;
+  color: #1c1814;
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+}
+
+.weather-condition {
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: #1c1814;
+  text-align: center;
+  line-height: normal;
+  margin: 0;
+}
+
+.weather-hi-lo {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #6b6560;
+  text-align: center;
+  line-height: normal;
+  margin: 0;
+}
+
+/* ─── City Dots ─────────────────────────────────────────────────────────────── */
+.weather-city-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-city-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(28, 24, 20, 0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.weather-city-dot.active {
+  background-color: #1c1814;
+  transform: scale(1.3);
+}
+
+/* ─── Cards ─────────────────────────────────────────────────────────────────── */
+.weather-card {
+  background: #ffffff;
+  border: 1px solid #e5e2db;
+  border-radius: 18px;
+  padding: 14px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.weather-card-label {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  color: rgba(107, 101, 96, 0.6);
+  letter-spacing: 1.5px;
+  line-height: normal;
+  margin: 0 0 10px;
+  width: 100%;
+}
+
+.weather-divider {
+  height: 1px;
+  background-color: #e5e2db;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.weather-loading-text {
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: #6b6560;
+  text-align: center;
+  width: 100%;
+  margin: 8px 0;
+}
+
+/* ─── Hourly ────────────────────────────────────────────────────────────────── */
+.weather-hourly-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  text-align: center;
+}
+
+.weather-hourly-row::-webkit-scrollbar {
+  display: none;
+}
+
+.weather-hourly-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 52px;
+}
+
+.weather-hourly-time {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #6b6560;
+  line-height: normal;
+}
+
+.weather-hourly-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.weather-hourly-temp {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1c1814;
+  line-height: normal;
+}
+
+/* ─── 5-Day Forecast ────────────────────────────────────────────────────────── */
+.weather-forecast-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.weather-day-divider {
+  height: 1px;
+  background-color: #e5e2db;
+  width: 100%;
+}
+
+.weather-forecast-day {
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #1c1814;
+  line-height: normal;
+  flex: 1;
+}
+
+.weather-forecast-icon {
+  font-size: 22px;
+  line-height: 1;
+  flex: 1;
+  text-align: center;
+}
+
+.weather-forecast-range {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: #6b6560;
+  line-height: normal;
+  flex: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ─── Home Indicator ────────────────────────────────────────────────────────── */
+.weather-home-indicator {
+  height: 5px;
+  width: 134px;
+  background-color: rgba(28, 24, 20, 0.2);
+  border-radius: 3px;
+  align-self: center;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+/* ─── Responsive: Mobile fills viewport ────────────────────────────────────── */
+@media (max-width: 479px) {
+  .weather-page {
+    padding: 0;
+    background-color: #D97757;
+    align-items: stretch;
+  }
+
+  .weather-phone {
+    width: 100%;
+    height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
