@@ -1,0 +1,23 @@
+{
+  "name": "Weather App",
+  "short_name": "Weather",
+  "description": "Live weather for San Francisco, New York, and Chicago",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#D97757",
+  "theme_color": "#D97757",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

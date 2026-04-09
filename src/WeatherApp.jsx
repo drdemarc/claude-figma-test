@@ -7,6 +7,13 @@ const CITIES = [
   { name: 'Chicago',       lat: 41.8781, lon: -87.6298 },
 ];
 
+// City background images via picsum.photos (seeded = same image every load)
+const CITY_BG = {
+  'San Francisco': 'https://picsum.photos/seed/sanfrancisco/800/1600',
+  'New York':      'https://picsum.photos/seed/newyork/800/1600',
+  'Chicago':       'https://picsum.photos/seed/chicago/800/1600',
+};
+
 function getWeatherInfo(code) {
   if (code === 0)                          return { icon: '☀',  desc: 'Clear' };
   if (code === 1)                          return { icon: '🌤', desc: 'Mainly Clear' };
@@ -128,6 +135,10 @@ export default function WeatherApp() {
   return (
     <div className="weather-page">
       <div className="weather-phone">
+        <div
+          className="weather-bg"
+          style={{ backgroundImage: `url(${CITY_BG[city.name]})` }}
+        />
         {/* Status Bar */}
         <div className="weather-status-bar">
           <span className="weather-time">{formatClockTime(clock)}</span>
