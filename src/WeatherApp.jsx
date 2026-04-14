@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './WeatherApp.css';
 
 const CITIES = [
@@ -91,14 +91,21 @@ export default function WeatherApp() {
     loadAll();
   }, []);
 
-  // Cycle cities every 3 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCityIndex(i => (i + 1) % CITIES.length);
-      setFadeKey(k => k + 1);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
+  // Swipe handlers
+  const touchStartX = useRef(null);
+
+  function handleTouchStart(e) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) < 40) return; // ignore small movements
+    setCityIndex(i => (i + (dx < 0 ? 1 : -1) + CITIES.length) % CITIES.length);
+    setFadeKey(k => k + 1);
+  }
 
   const city = CITIES[cityIndex];
   const data = weatherData[city.name];
@@ -134,7 +141,11 @@ export default function WeatherApp() {
 
   return (
     <div className="weather-page">
-      <div className="weather-phone">
+      <div
+          className="weather-phone"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
         <div
           className="weather-bg"
           style={{ backgroundImage: `url(${CITY_BG[city.name]})` }}

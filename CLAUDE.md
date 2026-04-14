@@ -1,3 +1,9 @@
+<!--
+CLAUDE.md
+Special configuration file used by Claude Code. Lets you provide persistent context and instructions to Claude that apply automatically to every session in that project.
+-->
+
+
 ## Project Overview
 <!-- 
 This is the highest-value section that creates context for Claude. In this section, you should explain in plain language:
