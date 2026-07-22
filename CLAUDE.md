@@ -1,185 +1,56 @@
-<!--
-CLAUDE.md
-Special configuration file used by Claude Code. Lets you provide persistent context and instructions to Claude that apply automatically to every session in that project.
--->
+# CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
-<!-- 
-This is the highest-value section that creates context for Claude. In this section, you should explain in plain language:
 
-• What the product is
-• Who it is for
-• What the app is trying to optimize for
-• Most important business or UX constraints
--->
+A single-screen weather PWA styled as an iPhone weather app. It shows live conditions, an hourly forecast, and a 5-day forecast for three hardcoded cities (San Francisco, New York, Chicago), swipeable like the iOS Weather app's city pager. Live at https://claude-figma-test-silk.vercel.app/.
 
 ## Tech Stack
-<!--
-Example:
-- Next.js 15 with App Router
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- React Hook Form + Zod for forms
-- Supabase for auth and data
-- Vitest for unit tests
 
-Do not introduce:
-- Redux
-- styled-components
-- Material UI
-unless explicitly requested.
--->
+- React 18 + Vite 5 (no router, no state library — one component holds all state)
+- Plain CSS (no Tailwind/CSS-in-JS) — one stylesheet per component
+- Open-Meteo API (`api.open-meteo.com`) for weather data, no API key required
+- picsum.photos for seeded per-city background photos
+- Installable PWA: `public/manifest.json` + a hand-written service worker at `public/sw.js`
+- ESLint 9 flat config (`eslint.config.js`)
+- Deployed on Vercel (auto-deploy from `main`)
 
 ## Architecture
-<!--
-How the repo is organized.
 
-Describe:
+Almost all logic lives in `src/WeatherApp.jsx`, a single ~230-line component:
+- `CITIES` — hardcoded array of `{ name, lat, lon }`; adding a city means adding an entry here (and to `CITY_BG`).
+- `CITY_BG` — maps city name to a seeded picsum.photos background URL.
+- `getWeatherInfo(code)` — maps Open-Meteo WMO weather codes to an emoji icon + description.
+- `formatHour` / `formatDate` / `formatClockTime` / `formatDayName` — display formatting helpers; `formatDayName` parses `YYYY-MM-DD` as local date components (not `new Date(dateStr)`) specifically to avoid UTC-offset day-shifting bugs.
+- `fetchWeather(city)` — hits Open-Meteo for current/hourly/daily forecast in Fahrenheit.
+- The component fetches all three cities in parallel on mount (`Promise.all`) and keeps them all in `weatherData` state, so swiping cities is instant (no per-swipe fetch, no refetch on swipe).
+- A `setInterval` clock re-renders the status bar time every second.
+- City navigation is touch-swipe only (`onTouchStart`/`onTouchEnd` on the phone frame, threshold 40px), with `fadeKey` bumped to re-trigger the CSS fade-in animation on city change.
 
-• major directories
-• responsibilities of each area
-• data flow
-• separation of concerns
-• where new code should go
--->
+`App.jsx` and `main.jsx` are thin wrappers; `main.jsx` also registers `public/sw.js` as the service worker. `App.css` is leftover default Vite/React template CSS — no current markup uses its classes (`.logo`, `.card`, `.read-the-docs`); don't assume it's live styling.
+
+The visual "phone frame" (`.weather-phone`) is a fixed 390×844 mockup on desktop and expands to fill the real viewport under `@media (max-width: 479px)` in `WeatherApp.css`, where the fake status bar is hidden in favor of the OS's real one and `env(safe-area-inset-*)` handles notch/Dynamic Island spacing.
+
+`public/sw.js` uses a network-first strategy for `open-meteo.com` requests (never serve stale weather from cache when online) and cache-first for everything else (app shell). Bumping the `CACHE` constant is how you force clients to drop old cached assets.
 
 ## Coding Conventions
-<!--
-Second most important section in the whole file as it has a direct impact on the quality of code output produced by Claude. It defines whether the code is readable and clear for anyone who will read it.
 
-Include anything that impacts day-to-day code generation:
-
-• naming conventions
-• component patterns
-• typing standards
-• file size preferences
-• import conventions
-• error handling
-• comments
-• async patterns
-
-Example:
-- Use TypeScript strictly; avoid `any`
-- Prefer functional components
-- Prefer named exports for shared modules
-- Use async/await instead of chained promises
-- Keep components focused and composable
-- Extract repeated logic into hooks or helpers
-- Prefer descriptive variable names over abbreviations
-- Add comments only when intent is non-obvious
-- Do not leave dead code or commented-out blocks
--->
-
-## UI and Design Rules
-<!--
-Define:
-
-• visual style
-• spacing philosophy
-• typography approach
-• interaction patterns
-• responsiveness
-• accessibility expectations
-• component usage rules
-
-Example:
-- Use shadcn/ui primitives as the default foundation
-- Prefer spacious layouts and strong visual hierarchy
-- Use restrained color usage; rely on typography, spacing, and contrast
-- Prefer 8px spacing rhythm
-- Buttons should have clear primary/secondary hierarchy
-- Forms should be short, scannable, and mobile-friendly
-- Every interactive element must have visible hover, focus, and disabled states
-- Meet accessibility expectations for contrast, labels, and keyboard navigation
--->
-
-
-## Content Guidance
-<!--
-State how copy should sound:
-
-• concise or detailed
-• technical or plain language
-• aspirational or practical
-• sentence length
-• headline style
-• forbidden patterns
-
-Example:
-- Use concise, confident language
-- Avoid hype and empty marketing phrases
-- Headlines should be clear before clever
-- Body copy should focus on user outcomes
-- Prefer short paragraphs and scannable structure
-- Avoid jargon unless the audience clearly expects it
--->
+- Functional components with hooks only; no class components.
+- Formatting helpers and constants (`CITIES`, `CITY_BG`, `getWeatherInfo`, `formatHour`, etc.) are plain top-level functions in the same file as their only consumer, not extracted into a `lib/`/`utils/` directory — this is a one-component app, keep it that way unless it grows.
+- CSS class names are hand-namespaced with a `weather-` prefix (BEM-ish, not CSS Modules).
 
 ## Testing and Quality
-<!--
-Define:
 
-• what tests to add
-• when tests are required
-• lint/typecheck expectations
-• what “done” means
-
-Example: 
-Before considering a task complete:
-- run typecheck
-- run lint
-- run relevant tests for modified logic
-
-Testing rules:
-- add unit tests for reusable logic
-- do not add heavy test scaffolding for simple presentational sections
-- ensure responsive behavior for UI changes
-- verify empty, loading, and error states where relevant
--->
-
-## File Placement Rules
-<!--
-Stops repo drift. Especially useful in mature repos where duplicate components become a problem fast.
-
-You need to define rules for:
-
-• where to create new files
-• when to edit existing files
-• when to create abstractions
-• naming patterns
-
-Example: 
-- Add new landing-page sections to `components/marketing/sections`
-- Add reusable primitives to `components/ui`
-- Put shared helpers in `lib`
-- Do not create a new abstraction for one-off usage
-- Prefer editing existing components over creating near-duplicates
--->
-
-## Safety Rules
-<!--
-Valuable for real projects. Its a good idea to tell Claude what it should avoid changing casually. It reduces “technically smart but operationally risky” edits that will lead to pricy refactoring.
-
-Example:
-- Do not rename public API routes unless explicitly requested
-- Do not change database schema without calling it out clearly
-- Do not modify auth flows unless the task requires it
-- Preserve backward compatibility for shared components
-- Flag major architectural changes before implementing them
--->
+There is no test suite or type checker configured. Before considering a change complete, run:
+- `npm run lint`
+- `npm run build` (catches Vite/React build errors)
+- Manually verify in the browser: city swiping, loading state, and both the desktop phone-frame layout and the sub-480px mobile layout (resize/use device emulation).
 
 ## Commands
-<!--
-Anthropic recommends giving Claude concrete project context, and commands are part of that operational context.
 
-Add the actual commands Claude should use (like install, dev, build, lint, test, format, storybook (if relevant), SQL database commands if safe)
-
-Example:
-- Install: `pnpm install`
-- Dev: `pnpm dev`
-- Build: `pnpm build`
-- Lint: `pnpm lint`
-- Typecheck: `pnpm typecheck`
-- Test: `pnpm test`
--->
+- Install: `npm install`
+- Dev server: `npm run dev`
+- Build: `npm run build`
+- Preview production build: `npm run preview`
+- Lint: `npm run lint`
